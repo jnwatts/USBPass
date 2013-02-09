@@ -1,0 +1,1 @@
+Fuses for internal oscillator (8MHz, CKOUT on PC7): -U lfuse:w:0x92:m -U hfuse:w:0xd9:m -U efuse:w:0xf0:m
