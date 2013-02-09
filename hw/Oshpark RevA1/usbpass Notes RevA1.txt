@@ -1,0 +1,17 @@
+==Issues with RevA1==
+* Copywrite mask is mirrored
+* Atmega32u2 comes pre-programmed for *EXTERNAL* 8MHz crystal (and clkdiv8): 8MHz square wave must be applied between XTAL1 and XTAL2
+** Consider building a boot-strapping jig
+* nHWB needs to be broken out
+** Consider connecting to SW3? (Easy rework to A1 to do this)
+* Accidentally ordered 0603 for R1 and R2 (should be 0402)
+* USB port slides far enough side-to-side to short out!!
+
+==Thoughts for RevB==
+* Need access to XTAL1/XTAL2 for boot-strap
+* Test-point for PC7 (CKOUT)
+* Debug pads should be spaced at 0.1", and on both sides of board to accomodate 2x3 pin header
+* DNI LED for optional feedback
+* Connect SW3 (SW1?) to nHWB through 0ohm resistor
+* Move caps further from USB
+* Wider USB port (Consider switching to real USB connector? Else may need "wings" to grip USB socket)
