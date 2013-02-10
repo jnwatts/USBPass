@@ -26,7 +26,7 @@ F_CPU        = 8000000
 F_USB        = $(F_CPU)
 OPTIMIZATION = s
 TARGET       = USBPass
-SRC          = $(TARGET).c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+SRC          = $(TARGET).c Descriptors.c $(wildcard Lib/*.c) $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
 ifeq ($(LUFA_PATH),)
 $(error "You must export LUFA_PATH before calling this Makefile")
 endif
