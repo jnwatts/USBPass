@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <avr/eeprom.h>
 #include "settings.h"
-#include "time.h"
+#include "timer.h"
 #include "key_store.h"
 #include "hid_keyboard.h"
 

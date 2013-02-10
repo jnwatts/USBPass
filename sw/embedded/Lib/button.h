@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <avr/io.h>
-#include "time.hpp"
 #include "debug.h"
+#include "timer.h"
 
 #define DEFAULT_BUTTON_DEBOUCE_TIME (50) // Milliseconds
 #define DEFAULT_BUTTON_LONG_TIME    (1000) // Milliseconds
@@ -33,7 +33,7 @@ static inline
 void button_check(button_obj_t *obj) {
     unsigned int value = (*(obj->port) & _BV(obj->pin)) ? 1 : 0;
     unsigned int active = (obj->active_high == (value == 1));
-    unsigned long now = avr_time();
+    unsigned long now = time();
     if (value != obj->previous_value) {
         if (now - obj->last_change_time <= obj->debounce_time) {
 //            DBG("Change, inside debounce\n");
