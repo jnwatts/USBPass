@@ -47,6 +47,9 @@
 
 #include "USBPass.h"
 
+/** Button state objects */
+static button_obj_t buttons[NUM_BUTTONS];
+
 /** Buffer to hold the previously generated Keyboard HID report, for comparison purposes inside the HID class driver. */
 static uint8_t PrevKeyboardHIDReportBuffer[sizeof(USB_KeyboardReport_Data_t)];
 
@@ -80,10 +83,13 @@ int main(void)
 	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
 	sei();
 
+	DBG("Enter main loop\r\n");
+	
 	for (;;)
 	{
-		HID_Device_USBTask(&Keyboard_HID_Interface);
-		USB_USBTask();
+		CheckButtons();
+		//HID_Device_USBTask(&Keyboard_HID_Interface);
+		//USB_USBTask();
 	}
 }
 
@@ -99,7 +105,52 @@ void SetupHardware(void)
 
 	/* Hardware Initialization */
 	LEDs_Init();
-	USB_Init();
+	Serial_Init(9600, false);
+	Serial_CreateStream(NULL);
+	settings_init();
+	//USB_Init();
+	timer_init();
+	SetupButtons();
+
+}
+
+/** Configure buttons from stored settings */
+void SetupButtons(void)
+{
+	button_obj_t *b = NULL;
+
+	MCUCR &= ~(1<<PUD);
+	DDRD &= ~((1<<SW1_PIN)|(1<<SW2_PIN|(1<<SW3_PIN)));
+	PORTD |= (1<<SW1_PIN)|(1<<SW2_PIN|(1<<SW3_PIN));
+
+	b = &buttons[BUTTON_SW1];
+	button_init(b);
+	b->port = &SW1_PORT;
+	b->pin = SW1_PIN;
+	map_button_to_action(b, ACTION_TYPE_SHORT, settings_get_int(SETTINGS_SW1_ACTION));
+	map_button_to_action(b, ACTION_TYPE_LONG, settings_get_int(SETTINGS_SW1_LONG_ACTION));
+
+	b = &buttons[BUTTON_SW2];
+	button_init(b);
+	b->port = &SW2_PORT;
+	b->pin = SW2_PIN;
+	map_button_to_action(b, ACTION_TYPE_SHORT, settings_get_int(SETTINGS_SW2_ACTION));
+	map_button_to_action(b, ACTION_TYPE_LONG, settings_get_int(SETTINGS_SW2_LONG_ACTION));
+
+	b = &buttons[BUTTON_SW3];
+	button_init(b);
+	b->port = &SW3_PORT;
+	b->pin = SW3_PIN;
+	map_button_to_action(b, ACTION_TYPE_SHORT, settings_get_int(SETTINGS_SW3_ACTION));
+	map_button_to_action(b, ACTION_TYPE_LONG, settings_get_int(SETTINGS_SW3_LONG_ACTION));
+}
+
+/** Check each button to see if an action has occurred */
+void CheckButtons(void)
+{
+	button_check(&buttons[BUTTON_SW1]);
+	button_check(&buttons[BUTTON_SW2]);
+	button_check(&buttons[BUTTON_SW3]);
 }
 
 /** Event handler for the library USB Connection event. */

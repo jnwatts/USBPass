@@ -18,6 +18,7 @@ typedef enum {
     SETTINGS_MAX
 } SettingsId_t;
 
+void settings_init(void);
 void settings_restore_defaults(void);
 int settings_get_int(SettingsId_t id);
 void settings_set_int(SettingsId_t id, int value);

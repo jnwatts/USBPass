@@ -27,12 +27,17 @@ F_USB        = $(F_CPU)
 OPTIMIZATION = s
 TARGET       = USBPass
 SRC          = $(TARGET).c Descriptors.c $(wildcard Lib/*.c) $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+SRC          += $(LUFA_SRC_SERIAL)
 ifeq ($(LUFA_PATH),)
 $(error "You must export LUFA_PATH before calling this Makefile")
 endif
 LUFA_PATH    := ${LUFA_PATH}/LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/
 LD_FLAGS     =
+
+ifneq ($(DEBUG),)
+CC_FLAGS     += -DDEBUG
+endif
 
 # Default target
 all:

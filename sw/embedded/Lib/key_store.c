@@ -58,7 +58,7 @@ void key_store_paste_name(int index) {
 }
 
 void key_store_paste_mode(void) {
-    paste_mode_end_time = avr_time() + settings_get_int(SETTINGS_PASTE_MODE_TIMEOUT);
+    paste_mode_end_time = time() + settings_get_int(SETTINGS_PASTE_MODE_TIMEOUT);
 }
 
 int key_store_num_keys(void) {
@@ -88,7 +88,7 @@ int key_store_quick_index(QuickKey_t quickkey) {
 }
 
 bool _key_store_is_paste_mode(void) {
-    return (avr_time() < paste_mode_end_time);
+    return (time() < paste_mode_end_time);
 }
 
 void _key_store_check_key_index(void) {

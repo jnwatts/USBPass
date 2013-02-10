@@ -1,9 +1,10 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#ifdef __x86_64__
+#ifdef DEBUG
 #include <stdio.h>
-#define DBG(msg, args...) printf(msg, ##args)
+#include <avr/pgmspace.h>
+#define DBG(msg, args...) printf_P(PSTR("%S:%d " msg), PSTR(__FILE__), __LINE__, ##args)
 #else
 #define DBG(msg, args...)
 #endif

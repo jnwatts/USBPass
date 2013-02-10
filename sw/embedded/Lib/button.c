@@ -1,11 +1,11 @@
 #include "button.h"
 
 void button_init(button_obj_t *obj) {
-   obj->active_high = true;
+   obj->active_high = false;
    obj->last_change_time = 0;
    obj->debounce_time = DEFAULT_BUTTON_DEBOUCE_TIME;
    obj->long_press_time = DEFAULT_BUTTON_LONG_TIME;
-   obj->previous_value = 0;
+   obj->previous_value = -1;
    obj->port = NULL;
    obj->pin = 0;
    obj->press_cb = NULL;

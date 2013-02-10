@@ -3,9 +3,17 @@
 #include <assert.h>
 #include <avr/pgmspace.h>
 #include <avr/eeprom.h>
+#include <util/crc16.h>
 #include "settings.h"
+#include "debug.h"
 
-#define EEPROM_SETTINGS_ADDR ((void*)(800))
+#define EEPROM_SETTINGS_ADDR ((uint8_t*)(800))
+
+#if 0
+#define DEBUG_SETTINGS DBG
+#else
+#define DEBUG_SETTINGS(fmt, args...) (void)0
+#endif
 
 typedef struct {
     Action_t SW1_ACTION;
@@ -19,6 +27,7 @@ typedef struct {
     int8_t QUICK_KEY_1;
     int8_t QUICK_KEY_2;
     int8_t QUICK_KEY_3;
+	int16_t SETTINGS_CRC;
 } Settings_t;
 
 
@@ -33,13 +42,35 @@ const Settings_t default_settings PROGMEM = {
     0,
     -1,
     -1,
-    -1
+    -1,
+	0
 };
 
 void *_settings_get_address(SettingsId_t id, void **addr, int *size);
+uint16_t _settings_calculate_crc(void);
+void _settings_update_crc(void);
+
+void settings_init(void)
+{
+	uint16_t crc_calc = 0;
+	uint16_t crc_read = 0;
+
+	crc_calc = _settings_calculate_crc();
+	crc_read = eeprom_read_word(EEPROM_SETTINGS_ADDR + offsetof(Settings_t, SETTINGS_CRC));
+
+	if (crc_calc != crc_read) {
+		DBG("Settings CRC failure, loading default settigns\r\n");
+		settings_restore_defaults();
+	}
+}
 
 void settings_restore_defaults(void) {
-    eeprom_update_block(&default_settings, EEPROM_SETTINGS_ADDR, sizeof(default_settings));
+	int i = 0;
+	for (i = 0; i < sizeof(default_settings) -  sizeof(default_settings.SETTINGS_CRC); i++) {
+		eeprom_update_byte(EEPROM_SETTINGS_ADDR + i, pgm_read_byte(((uint8_t*)&default_settings) + i));
+		DEBUG_SETTINGS("Update 1 bytes to %p: %x, readback: %x\r\n", addr, data);
+	}
+	_settings_update_crc();
 }
 
 int settings_get_int(SettingsId_t id) {
@@ -49,6 +80,7 @@ int settings_get_int(SettingsId_t id) {
     _settings_get_address(id, &addr, &size);
     if (size > 0) {
         eeprom_read_block(&ret, addr, size);
+		DEBUG_SETTINGS("Read %d bytes from %p: %x\r\n", size, addr, ret);
     }
     return ret;
 }
@@ -59,6 +91,7 @@ void settings_set_int(SettingsId_t id, int value) {
     _settings_get_address(id, &addr, &size);
     if (size > 0) {
         eeprom_update_block(&value, addr, size);
+		_settings_update_crc();
     }
 }
 
@@ -84,4 +117,23 @@ void *_settings_get_address(SettingsId_t id, void **addr, int *size) {
         break;
     }
     return addr;
+}
+
+uint16_t _settings_calculate_crc(void)
+{
+	uint16_t crc = 1;
+	uint8_t data = 0;
+	int i = 0;
+	for (i = 0; i < sizeof(Settings_t) - sizeof(default_settings.SETTINGS_CRC); i++) {
+		data = eeprom_read_byte(EEPROM_SETTINGS_ADDR + i);
+		DEBUG_SETTINGS("Read 1 bytes from %p: %x\r\n", EEPROM_SETTINGS_ADDR + i, data);
+		crc = _crc16_update(crc, data);
+	}
+	return crc;
+}
+
+void _settings_update_crc(void)
+{
+	uint16_t crc = _settings_calculate_crc();
+	eeprom_update_word(EEPROM_SETTINGS_ADDR + offsetof(Settings_t, SETTINGS_CRC), crc);
 }

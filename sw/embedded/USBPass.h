@@ -60,7 +60,16 @@
 
 		#include "Config/AppConfig.h"
 
+		#include "Lib/action.h"
+		#include "Lib/button.h"
+		#include "Lib/settings.h"
+		#include "Lib/timer.h"
+		#include "Lib/debug.h"
+
+		#include "pin_map.h"
+
 		#include <LUFA/Drivers/Board/LEDs.h>
+		#include <LUFA/Drivers/Peripheral/Serial.h>
 		#include <LUFA/Drivers/USB/USB.h>
 
 	/* Macros: */
@@ -81,6 +90,8 @@
 
 	/* Function Prototypes: */
 		void SetupHardware(void);
+		void SetupButtons(void);
+		void CheckButtons(void);
 
 		void EVENT_USB_Device_Connect(void);
 		void EVENT_USB_Device_Disconnect(void);

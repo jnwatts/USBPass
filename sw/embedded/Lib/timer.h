@@ -3,14 +3,21 @@
 
 #include <avr/io.h>
 
-extern unsigned long _time_ms;
-extern unsigned int _time_8hz;
+extern volatile unsigned long _time_ms;
+extern volatile unsigned int _time_8hz;
 
-void init_timers(void);
+void timer_init(void);
 
 inline
 unsigned long time(void) {
-	return (_time_ms + TCNT1);
+	uint8_t L, H;
+	L = TCNT1L;
+	H = TCNT1H;
+#if 0
+	return (_time_ms + ((unsigned long)L + ((unsigned long)H)<<8)/1000);
+#else
+	return _time_ms;
+#endif
 }
 
 inline unsigned int time_8hz(void) {
