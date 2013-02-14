@@ -211,23 +211,36 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          uint16_t* const ReportSize)
 {
 	static bool key_pressed = false;
+	static char previous_key = '\0';
 	bool retval = false;
-	USB_KeyboardReport_Data_t* KeyboardReport = (USB_KeyboardReport_Data_t*)ReportData;
+	if (ReportType == HID_REPORT_ITEM_In) {
+		USB_KeyboardReport_Data_t* KeyboardReport = (USB_KeyboardReport_Data_t*)ReportData;
 
-	//TODO: Implement delay if desired (I think this will chew through keys at the speed of HID reports?
-
-	if (!key_pressed) {
-		char key = hid_key_get_key();
-		if (key != '\0') {
+		//TODO: Implement delay if desired (I think this will chew through keys at the speed of HID reports?
+		char key = hid_key_peek_key();
+		if (key == '\0' || key == previous_key) {
+			KeyboardReport->KeyCode[0] = 0;
+			KeyboardReport->Modifier = 0;
+			retval = key_pressed;
+			key_pressed = false;
+			previous_key = '\0';
+		} else if (key != '\0') {
+			hid_key_consume();
 			retval = ascii_to_scancode(key, &KeyboardReport->KeyCode[0], &KeyboardReport->Modifier);
+			key_pressed = retval;
+			previous_key = key;
 		}
-	} else {
-		KeyboardReport->Modifier = 0;
-		KeyboardReport->KeyCode[0] = 0;
+		if (key != '\0') {
+			if (key_pressed) {
+				printf("Press: %c\r\n", key);
+			} else {
+				printf("Depress: %c\r\n", key);
+			}
+		}
+		*ReportSize = sizeof(USB_KeyboardReport_Data_t);
+	} else if (ReportType == HID_REPORT_ITEM_Feature) {
+		//TODO: Figure out how to generate reports in libusb and set reporttype to Feature
 	}
-	key_pressed = retval;
-
-	*ReportSize = sizeof(USB_KeyboardReport_Data_t);
 
 	return retval;
 }
