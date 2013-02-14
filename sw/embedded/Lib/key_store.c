@@ -31,10 +31,8 @@ void key_store_paste(int index) {
                 sizeof(&current_key.key)
                 );
 
-    unsigned int i = 0;
-    while (current_key.key[i] != '\0' && i < sizeof(current_key.key)) {
-        hid_key_putch_raw(current_key.key[i]);
-        i++;
+	if (current_key.key[0] != '\0') {
+        hid_key_print(&current_key.key[0]);
     }
 }
 
@@ -50,11 +48,9 @@ void key_store_paste_name(int index) {
                 sizeof(&current_key.name)
                 );
 
-    unsigned int i = 0;
-    while (current_key.name[i] != '\0' && i < sizeof(current_key.name)) {
-        hid_key_putch(current_key.name[i]);
-        i++;
-    }
+	if (current_key.name[0] != '\0') {
+        hid_key_print(&current_key.name[0]);
+	}
 }
 
 void key_store_paste_mode(void) {
