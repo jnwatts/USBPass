@@ -45,6 +45,7 @@
  *  the firmware and is responsible for the initial application hardware configuration.
  */
 
+#define ENABLE_USB
 #include "USBPass.h"
 
 /** Button state objects */
@@ -88,8 +89,10 @@ int main(void)
 	for (;;)
 	{
 		CheckButtons();
+#ifdef ENABLE_USB
 		HID_Device_USBTask(&Keyboard_HID_Interface);
 		USB_USBTask();
+#endif
 	}
 }
 
@@ -108,7 +111,9 @@ void SetupHardware(void)
 	Serial_Init(9600, false);
 	Serial_CreateStream(NULL);
 	settings_init();
+#ifdef ENABLE_USB
 	USB_Init();
+#endif
 	timer_init();
 	SetupButtons();
 
