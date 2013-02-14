@@ -205,33 +205,26 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
+	static bool key_pressed = false;
+	bool retval = false;
 	USB_KeyboardReport_Data_t* KeyboardReport = (USB_KeyboardReport_Data_t*)ReportData;
 
-#if 0
-	uint8_t ButtonStatus_LCL = Buttons_GetStatus();
+	//TODO: Implement delay if desired (I think this will chew through keys at the speed of HID reports?
 
-	KeyboardReport->Modifier = HID_KEYBOARD_MODIFIER_LEFTSHIFT;
-
-	if (JoyStatus_LCL & JOY_UP)
-	  KeyboardReport->KeyCode[0] = HID_KEYBOARD_SC_A;
-	else if (JoyStatus_LCL & JOY_DOWN)
-	  KeyboardReport->KeyCode[0] = HID_KEYBOARD_SC_B;
-
-	if (JoyStatus_LCL & JOY_LEFT)
-	  KeyboardReport->KeyCode[0] = HID_KEYBOARD_SC_C;
-	else if (JoyStatus_LCL & JOY_RIGHT)
-	  KeyboardReport->KeyCode[0] = HID_KEYBOARD_SC_D;
-
-	if (JoyStatus_LCL & JOY_PRESS)
-	  KeyboardReport->KeyCode[0] = HID_KEYBOARD_SC_E;
-
-	if (ButtonStatus_LCL & BUTTONS_BUTTON1)
-	  KeyboardReport->KeyCode[0] = HID_KEYBOARD_SC_F;
-#endif
+	if (!key_pressed) {
+		char key = hid_key_get_key();
+		if (key != '\0') {
+			retval = ascii_to_scancode(key, &KeyboardReport->KeyCode[0], &KeyboardReport->Modifier);
+		}
+	} else {
+		KeyboardReport->Modifier = 0;
+		KeyboardReport->KeyCode[0] = 0;
+	}
+	key_pressed = retval;
 
 	*ReportSize = sizeof(USB_KeyboardReport_Data_t);
 
-	return false;
+	return retval;
 }
 
 /** HID class driver callback function for the processing of HID reports from the host.
