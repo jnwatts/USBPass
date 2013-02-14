@@ -65,6 +65,8 @@
 		#include "Lib/settings.h"
 		#include "Lib/timer.h"
 		#include "Lib/debug.h"
+		#include "Lib/hid_keyboard.h"
+		#include "Lib/scancodes.h"
 
 		#include "pin_map.h"
 

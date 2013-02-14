@@ -88,8 +88,8 @@ int main(void)
 	for (;;)
 	{
 		CheckButtons();
-		//HID_Device_USBTask(&Keyboard_HID_Interface);
-		//USB_USBTask();
+		HID_Device_USBTask(&Keyboard_HID_Interface);
+		USB_USBTask();
 	}
 }
 
@@ -108,7 +108,7 @@ void SetupHardware(void)
 	Serial_Init(9600, false);
 	Serial_CreateStream(NULL);
 	settings_init();
-	//USB_Init();
+	USB_Init();
 	timer_init();
 	SetupButtons();
 
