@@ -84,7 +84,7 @@ int main(void)
 	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
 	sei();
 
-	DBG("Enter main loop\r\n");
+	DBG("Enter main loop");
 	
 	for (;;)
 	{
