@@ -241,8 +241,6 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 		}
 #endif
 		*ReportSize = sizeof(USB_KeyboardReport_Data_t);
-	} else if (ReportType == HID_REPORT_ITEM_Feature) {
-		//TODO: Figure out how to generate reports in libusb and set reporttype to Feature
 	}
 
 	return retval;
@@ -262,21 +260,5 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
                                           const void* ReportData,
                                           const uint16_t ReportSize)
 {
-	//TODO: Potentially react to NUMLOCK/CAPSLOCK/SCROLLLOCK sequences
-#if 0
-	uint8_t  LEDMask   = LEDS_NO_LEDS;
-	uint8_t* LEDReport = (uint8_t*)ReportData;
-
-	if (*LEDReport & HID_KEYBOARD_LED_NUMLOCK)
-	  LEDMask |= LEDS_LED1;
-
-	if (*LEDReport & HID_KEYBOARD_LED_CAPSLOCK)
-	  LEDMask |= LEDS_LED3;
-
-	if (*LEDReport & HID_KEYBOARD_LED_SCROLLLOCK)
-	  LEDMask |= LEDS_LED4;
-
-	LEDs_SetAllLEDs(LEDMask);
-#endif
 }
 
