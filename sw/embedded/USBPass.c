@@ -213,7 +213,8 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 	static bool key_pressed = false;
 	static char previous_key = '\0';
 	bool retval = false;
-	if (ReportType == HID_REPORT_ITEM_In) {
+
+	if (ReportType == HID_REPORT_ITEM_In || ReportType == HID_REPORT_ITEM_Out) {
 		USB_KeyboardReport_Data_t* KeyboardReport = (USB_KeyboardReport_Data_t*)ReportData;
 
 		//TODO: Implement delay if desired (I think this will chew through keys at the speed of HID reports?
