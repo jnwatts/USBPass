@@ -230,6 +230,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 			key_pressed = retval;
 			previous_key = key;
 		}
+#ifdef DEBUG
 		if (key != '\0') {
 			if (key_pressed) {
 				printf("Press: %c\r\n", key);
@@ -237,6 +238,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 				printf("Depress: %c\r\n", key);
 			}
 		}
+#endif
 		*ReportSize = sizeof(USB_KeyboardReport_Data_t);
 	} else if (ReportType == HID_REPORT_ITEM_Feature) {
 		//TODO: Figure out how to generate reports in libusb and set reporttype to Feature
