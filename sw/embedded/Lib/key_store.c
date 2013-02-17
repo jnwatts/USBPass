@@ -46,7 +46,7 @@ void key_store_paste(int index) {
     eeprom_read_block(
                 &current_key.key,
                 _key_store_eeprom_addr_from_index(index) + offsetof(Key_t, key),
-                sizeof(&current_key.key)
+                sizeof(current_key.key)
                 );
 
 	if (current_key.key[0] != '\0') {
@@ -63,7 +63,7 @@ void key_store_paste_name(int index) {
     eeprom_read_block(
                 &current_key.name,
                 _key_store_eeprom_addr_from_index(index) + offsetof(Key_t, name),
-                sizeof(&current_key.name)
+                sizeof(current_key.name)
                 );
 
 	if (current_key.name[0] != '\0') {
