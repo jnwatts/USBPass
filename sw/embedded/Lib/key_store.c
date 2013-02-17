@@ -80,15 +80,29 @@ int key_store_num_keys(void) {
 }
 
 void key_store_incr(int count) {
-    current_key_index += count;
-    _key_store_check_key_index();
+	if (count < 0)
+		return;
+	if (num_keys == 0)
+		return;
+	if (current_key_index + count >= num_keys)
+		current_key_index = num_keys - 1;
+	else
+		current_key_index += count;
+	DBG("current_key_index=%d", current_key_index);
     if (_key_store_is_paste_mode())
         key_store_paste_name(current_key_index);
 }
 
 void key_store_decr(int count) {
-    current_key_index -= count;
-    _key_store_check_key_index();
+	if (count < 0)
+		return;
+	if (num_keys == 0)
+		return;
+	if (count > current_key_index)
+		current_key_index = num_keys - 1;
+	else
+		current_key_index -= count;
+	DBG("current_key_index=%d", current_key_index);
     if (_key_store_is_paste_mode())
         key_store_paste_name(current_key_index);
 }
