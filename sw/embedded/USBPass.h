@@ -53,6 +53,7 @@
 		#include <avr/power.h>
 		#include <avr/interrupt.h>
 		#include <avr/interrupt.h>
+		#include <avr/wdt.h>
 		#include <stdbool.h>
 		#include <string.h>
 
@@ -96,11 +97,13 @@
 		#define REPORT_ID_SET_COMMIT_KEY 3
 		#define REPORT_ID_SET_NUM_KEYS 4
 		#define REPORT_ID_SET_QUICK_KEY 5
+		#define REPORT_ID_RESET 0xFF
 
 	/* Function Prototypes: */
 		void SetupHardware(void);
 		void SetupButtons(void);
 		void CheckButtons(void);
+		void TeardownHardware(void);
 
 		void EVENT_USB_Device_Connect(void);
 		void EVENT_USB_Device_Disconnect(void);

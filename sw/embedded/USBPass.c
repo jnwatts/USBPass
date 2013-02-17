@@ -48,6 +48,8 @@
 #define ENABLE_USB
 #include "USBPass.h"
 
+static bool running = true;
+
 /** Button state objects */
 static button_obj_t buttons[NUM_BUTTONS];
 
@@ -74,11 +76,14 @@ USB_ClassInfo_HID_Device_t Keyboard_HID_Interface =
 			},
     };
 
+
+
 /** Main program entry point. This routine contains the overall program flow, including initial
  *  setup of all components and the main program loop.
  */
 int main(void)
 {
+init:
 	SetupHardware();
 
 	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
@@ -86,7 +91,8 @@ int main(void)
 
 	DBG("Enter main loop");
 	
-	for (;;)
+	running = true;
+	while (running)
 	{
 		CheckButtons();
 #ifdef ENABLE_USB
@@ -94,6 +100,16 @@ int main(void)
 		USB_USBTask();
 #endif
 	}
+
+	TeardownHardware();
+
+#if 0 /* TODO: Figure out how to use WDT to do device reset */
+	cli();
+	wdt_enable(WDTO_15MS);
+	while(1);
+#else
+	goto init;
+#endif
 }
 
 /** Configures the board hardware and chip peripherals for the firmware's functionality. */
@@ -157,6 +173,11 @@ void CheckButtons(void)
 	button_check(&buttons[BUTTON_SW1]);
 	button_check(&buttons[BUTTON_SW2]);
 	button_check(&buttons[BUTTON_SW3]);
+}
+
+void TeardownHardware(void)
+{
+	// Nothing to do?
 }
 
 /** Event handler for the library USB Connection event. */
@@ -304,9 +325,12 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 				arg1 = *(((uint8_t*)ReportData) + 1);
 				key_store_set_quick_index(arg0, arg1);
 				break;
+			case REPORT_ID_RESET:
+				DBG();
+				running = false;
+				break;
 			default:
 				break;
 		}
 	}
 }
-
