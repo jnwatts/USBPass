@@ -39,7 +39,7 @@ void key_store_init(void)
 
 void key_store_paste(int index) {
     if (index == KEY_STORE_INVALID_INDEX) {
-        //TODO: Print invalid?
+		DBG("Invalid index");
         return;
     }
 
@@ -56,7 +56,7 @@ void key_store_paste(int index) {
 
 void key_store_paste_name(int index) {
     if (index == KEY_STORE_INVALID_INDEX) {
-        //TODO: Print invalid?
+		DBG("Invalid index");
         return;
     }
 
