@@ -1,6 +1,6 @@
 #include "hid_keyboard.h"
 
-static char string_buffer[HID_KEYBOARD_BUFFER_SIZE] = {'\0'};
+static char string_buffer[HID_KEYBOARD_BUFFER_SIZE+1] = {'\0'};
 static int buffer_pos = -1;
 
 void hid_key_print(const char *str)
