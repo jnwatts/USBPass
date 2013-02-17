@@ -111,6 +111,7 @@ void SetupHardware(void)
 	Serial_Init(9600, false);
 	Serial_CreateStream(NULL);
 	settings_init();
+	key_store_init();
 #ifdef ENABLE_USB
 	USB_Init();
 #endif

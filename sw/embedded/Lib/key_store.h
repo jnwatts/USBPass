@@ -19,6 +19,8 @@ typedef struct {
     char name[KEY_STORE_MAX_KEY_NAME_LEN];
 } Key_t;
 
+void key_store_init(void);
+
 void key_store_paste(int index);
 void key_store_paste_name(int index);
 void key_store_paste_mode(void);

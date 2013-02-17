@@ -19,6 +19,24 @@ bool _key_store_is_paste_mode(void);
 void _key_store_check_key_index(void);
 void *_key_store_eeprom_addr_from_index(int index);
 
+void key_store_init(void)
+{
+	num_keys = settings_get_int(SETTINGS_NUM_KEYS);
+	quick_key[QUICKKEY_1] = settings_get_int(SETTINGS_QUICK_KEY_1);
+	quick_key[QUICKKEY_2] = settings_get_int(SETTINGS_QUICK_KEY_2);
+	quick_key[QUICKKEY_3] = settings_get_int(SETTINGS_QUICK_KEY_3);
+
+	DBG("num_keys=%d", num_keys);
+	DBG("quick_key[1]=%d", quick_key[QUICKKEY_1]);
+	DBG("quick_key[2]=%d", quick_key[QUICKKEY_2]);
+	DBG("quick_key[3]=%d", quick_key[QUICKKEY_3]);
+
+	if (num_keys > 0)
+		current_key_index = 0;
+	else
+		current_key_index = KEY_STORE_INVALID_INDEX;
+}
+
 void key_store_paste(int index) {
 #if 0
     if (index == KEY_STORE_INVALID_INDEX) {
