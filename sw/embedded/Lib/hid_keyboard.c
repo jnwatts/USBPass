@@ -18,6 +18,15 @@ void hid_key_print_P(const char *str)
 	buffer_pos = 0;
 }
 
+void hid_key_print_n(const char *str, int len)
+{
+	if (len > sizeof(string_buffer) - 1)
+		len = sizeof(string_buffer) - 1;
+	strncpy(string_buffer, str, len);
+	string_buffer[len] = '\0';
+	buffer_pos = 0;
+}
+
 char hid_key_peek_key(void)
 {
 	if (buffer_pos >= 0 && buffer_pos < sizeof(string_buffer)) {

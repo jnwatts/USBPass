@@ -11,6 +11,7 @@
 
 void hid_key_print(const char *str);
 void hid_key_print_P(const char *str);
+void hid_key_print_n(const char *str, int len);
 char hid_key_peek_key(void);
 char hid_key_get_key(void);
 void hid_key_consume(void);
