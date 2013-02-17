@@ -38,7 +38,6 @@ void key_store_init(void)
 }
 
 void key_store_paste(int index) {
-#if 0
     if (index == KEY_STORE_INVALID_INDEX) {
         //TODO: Print invalid?
         return;
@@ -49,9 +48,6 @@ void key_store_paste(int index) {
                 _key_store_eeprom_addr_from_index(index) + offsetof(Key_t, key),
                 sizeof(&current_key.key)
                 );
-#else
-	strncpy_P(&current_key.key[0], PSTR("Hello, World."), sizeof(current_key.key));
-#endif
 
 	if (current_key.key[0] != '\0') {
         hid_key_print(&current_key.key[0]);
