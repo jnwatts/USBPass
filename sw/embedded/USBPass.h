@@ -67,6 +67,7 @@
 		#include "Lib/debug.h"
 		#include "Lib/hid_keyboard.h"
 		#include "Lib/scancodes.h"
+		#include "Lib/key_store.h"
 
 		#include "pin_map.h"
 
@@ -89,6 +90,12 @@
 
 		/** LED mask for the library LED driver, to indicate that the USB interface is busy. */
 		#define LEDMASK_USB_BUSY         LEDS_LED2
+
+		#define REPORT_ID_SET_KEY 1
+		#define REPORT_ID_SET_NAME 2
+		#define REPORT_ID_SET_COMMIT_KEY 3
+		#define REPORT_ID_SET_NUM_KEYS 4
+		#define REPORT_ID_SET_QUICK_KEY 5
 
 	/* Function Prototypes: */
 		void SetupHardware(void);

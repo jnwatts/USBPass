@@ -261,5 +261,52 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
                                           const void* ReportData,
                                           const uint16_t ReportSize)
 {
+	if (ReportType == HID_REPORT_ITEM_Feature) {
+		uint8_t *data = 0;
+		uint8_t arg0 = 0;
+		uint8_t arg1 = 0;
+		switch (ReportID) {
+			case REPORT_ID_SET_KEY:
+			case REPORT_ID_SET_NAME:
+				if (ReportSize < 3)
+					break;
+				DBG();
+				arg0 = *(((uint8_t*)ReportData) + 0);
+				arg1 = *(((uint8_t*)ReportData) + 1);
+				data = ((uint8_t*)ReportData) + 2;
+				DBG("ReportSize=%d, arg0=%d, arg1=%d", ReportSize, arg0, arg1);
+				if (ReportSize < arg1 + 2 || arg1 == 0)
+					break;
+				if (ReportID == REPORT_ID_SET_KEY)
+					key_store_set_key((char*)data, arg0, arg1);
+				else
+					key_store_set_name((char*)data, arg0, arg1);
+				break;
+			case REPORT_ID_SET_COMMIT_KEY:
+				if (ReportSize < 1)
+					break;
+				DBG();
+				arg0 = *(((uint8_t*)ReportData) + 0);
+				key_store_commit_index(arg0);
+				break;
+			case REPORT_ID_SET_NUM_KEYS:
+				if (ReportSize < 1)
+					break;
+				DBG();
+				arg0 = *(((uint8_t*)ReportData) + 0);
+				key_store_set_num_keys(arg0);
+				break;
+			case REPORT_ID_SET_QUICK_KEY:
+				if (ReportSize < 2)
+					break;
+				DBG();
+				arg0 = *(((uint8_t*)ReportData) + 0);
+				arg1 = *(((uint8_t*)ReportData) + 1);
+				key_store_set_quick_index(arg0, arg1);
+				break;
+			default:
+				break;
+		}
+	}
 }
 
