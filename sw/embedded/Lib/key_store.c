@@ -115,6 +115,93 @@ int key_store_quick_index(QuickKey_t quickkey) {
     return quick_key[quickkey];
 }
 
+void key_store_set_key(char *buf, int offset, int length) {
+	DBG("offset=%d, length=%d", offset, length);
+	if (offset + length >= sizeof(current_key.key))
+		return;
+#ifdef DEBUG
+	int i = 0;
+	printf("buf={");
+	for (i = 0; i < length; i++) {
+		printf("%02x", buf[i]);
+	}
+	printf("}\r\n");
+#endif
+	strncpy(current_key.key + offset, buf, length);
+	if (offset + length < sizeof(current_key.key))
+		current_key.key[offset+length] = '\0';
+	DBG();
+}
+
+void key_store_set_name(char *buf, int offset, int length) {
+	DBG("offset=%d, length=%d", offset, length);
+	if (offset + length >= sizeof(current_key.name))
+		return;
+#ifdef DEBUG
+	int i = 0;
+	printf("buf={");
+	for (i = 0; i < length; i++) {
+		printf("%02x", buf[i]);
+	}
+	printf("}\r\n");
+#endif
+	strncpy(current_key.name + offset, buf, length);
+	if (offset + length < sizeof(current_key.name))
+		current_key.name[offset+length] = '\0';
+	DBG();
+}
+
+void key_store_commit_index(int index) {
+	if (index >= num_keys || index < 0)
+		return;
+	int len = 0;
+
+	len = strnlen(current_key.name, sizeof(current_key.name));
+	if (len < sizeof(current_key.name))
+		current_key.name[len++] = '\0';
+    eeprom_update_block(
+                &current_key.name,
+                _key_store_eeprom_addr_from_index(index) + offsetof(Key_t, name),
+                len
+                );
+	len = strnlen(current_key.key, sizeof(current_key.key));
+	if (len < sizeof(current_key.key))
+		current_key.key[len++] = '\0';
+    eeprom_update_block(
+                &current_key.key,
+                _key_store_eeprom_addr_from_index(index) + offsetof(Key_t, key),
+                len
+                );
+	DBG();
+}
+
+void key_store_set_num_keys(int count) {
+	if (count > KEY_STORE_MAX_KEYS)
+		return;
+	num_keys = count;
+	settings_set_int(SETTINGS_NUM_KEYS, count);
+}
+
+void key_store_set_quick_index(QuickKey_t quickkey, int index) {
+	if (index >= num_keys && index != KEY_STORE_INVALID_INDEX)
+		return;
+	switch (quickkey) {
+		case QUICKKEY_1:
+			settings_set_int(SETTINGS_QUICK_KEY_1, index);
+			break;
+		case QUICKKEY_2:
+			settings_set_int(SETTINGS_QUICK_KEY_2, index);
+			break;
+		case QUICKKEY_3:
+			settings_set_int(SETTINGS_QUICK_KEY_3, index);
+			break;
+		default:
+			return;
+	}
+	quick_key[quickkey] = index;
+}
+
+
 bool _key_store_is_paste_mode(void) {
     return (time() < paste_mode_end_time);
 }

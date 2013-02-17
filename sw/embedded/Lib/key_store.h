@@ -30,4 +30,12 @@ void key_store_decr(int count);
 int key_store_index(void);
 int key_store_quick_index(QuickKey_t quickkey);
 
+void key_store_set_key(char *buf, int offset, int length);
+void key_store_set_name(char *buf, int offset, int length);
+void key_store_commit_index(int index);
+
+void key_store_set_num_keys(int count);
+
+void key_store_set_quick_index(QuickKey_t quickkey, int index);
+
 #endif // KEY_STORE_H
