@@ -50,7 +50,7 @@ void key_store_paste(int index) {
                 );
 
 	if (current_key.key[0] != '\0') {
-        hid_key_print(&current_key.key[0]);
+        hid_key_print_n(&current_key.key[0], sizeof(current_key.key));
     }
 }
 
@@ -67,7 +67,7 @@ void key_store_paste_name(int index) {
                 );
 
 	if (current_key.name[0] != '\0') {
-        hid_key_print(&current_key.name[0]);
+        hid_key_print_n(&current_key.name[0], sizeof(current_key.name));
 	}
 }
 
