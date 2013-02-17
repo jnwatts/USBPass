@@ -97,6 +97,7 @@
 		#define REPORT_ID_SET_COMMIT_KEY 3
 		#define REPORT_ID_SET_NUM_KEYS 4
 		#define REPORT_ID_SET_QUICK_KEY 5
+		#define REPORT_ID_SET_ACTION 6
 		#define REPORT_ID_RESET 0xFF
 
 	/* Function Prototypes: */
@@ -104,6 +105,7 @@
 		void SetupButtons(void);
 		void CheckButtons(void);
 		void TeardownHardware(void);
+		void SaveButtonAction(int button_id, int action_id);
 
 		void EVENT_USB_Device_Connect(void);
 		void EVENT_USB_Device_Disconnect(void);

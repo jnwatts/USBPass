@@ -180,6 +180,34 @@ void TeardownHardware(void)
 	// Nothing to do?
 }
 
+void SaveButtonAction(int button_id, int action_id)
+{
+	SettingsId_t setting_id = 0;
+	switch (button_id) {
+		case BUTTON_SW1:
+			setting_id = SETTINGS_SW1_ACTION;
+			break;
+		case BUTTON_SW2:
+			setting_id = SETTINGS_SW2_ACTION;
+			break;
+		case BUTTON_SW3:
+			setting_id = SETTINGS_SW3_ACTION;
+			break;
+		case BUTTON_SW1L:
+			setting_id = SETTINGS_SW1_LONG_ACTION;
+			break;
+		case BUTTON_SW2L:
+			setting_id = SETTINGS_SW2_LONG_ACTION;
+			break;
+		case BUTTON_SW3L:
+			setting_id = SETTINGS_SW3_LONG_ACTION;
+			break;
+		default:
+			return;
+	}
+	settings_set_int(setting_id, action_id);
+}
+
 /** Event handler for the library USB Connection event. */
 void EVENT_USB_Device_Connect(void)
 {
@@ -324,6 +352,20 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 				arg0 = *(((uint8_t*)ReportData) + 0);
 				arg1 = *(((uint8_t*)ReportData) + 1);
 				key_store_set_quick_index(arg0, arg1);
+				break;
+			case REPORT_ID_SET_ACTION:
+				if (ReportSize < 2)
+					break;
+				DBG();
+				arg0 = *(((uint8_t*)ReportData) + 0);
+				arg1 = *(((uint8_t*)ReportData) + 1);
+				if (arg0 & 0x7F >= sizeof(buttons))
+					break;
+				map_button_to_action(
+						&buttons[arg0 & 0x7F],
+						(arg0 & 0x80)?ACTION_TYPE_LONG:ACTION_TYPE_SHORT,
+						arg1);
+				SaveButtonAction(arg0, arg1);
 				break;
 			case REPORT_ID_RESET:
 				DBG();
