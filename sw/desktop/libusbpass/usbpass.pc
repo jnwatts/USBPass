@@ -1,0 +1,13 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib/
+includedir=${prefix}/include
+qt_config=include_source_dir lex yacc warn_on uic resources qt warn_on release incremental link_prl gdb_dwarf_index def_files_disabled exceptions no_mocdepend release stl qt_no_framework create_pc create_prl no_install_prl link_pkgconfig moc thread dll
+
+Name: Usbpass
+Description: Usbpass Library
+Version: 1.0.0
+Libs: -L${libdir} -lusbpass 
+Libs.private: -L/usr/lib/x86_64-linux-gnu  -L/usr/local/lib -lhidapi-libusb -lQtCore -lpthread   
+Cflags:  -I${includedir}
+

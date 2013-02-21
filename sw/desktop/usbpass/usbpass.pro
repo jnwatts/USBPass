@@ -11,14 +11,17 @@ QT       -= gui
 TARGET = usbpass
 CONFIG   += console
 CONFIG   -= app_bundle
-
 TEMPLATE = app
 
-LIBS += -L../hidapi/libusb/.libs -lhidapi-libusb
-QMAKE_CXXFLAGS += -I../hidapi/hidapi -ggdb
+unix {
+    CONFIG   += link_pkgconfig
+    PKGCONFIG += hidapi-libusb
+    PKGCONFIG += usbpass
+}
 
-SOURCES += main.cpp \
-    usbpassdevice.cpp
+QMAKE_CXXFLAGS += -ggdb
 
-HEADERS += \
-    usbpassdevice.h
+SOURCES += main.cpp
+
+HEADERS +=
+

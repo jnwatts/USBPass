@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
             usbpass.set_quick_key(atoi(argv[2]),
                                   atoi(argv[3]));
         }
-    } else if (strncmp(argv[1], CMD_SET_QUICKKEY, strlen(CMD_SET_QUICKKEY)) == 0) {
+    } else if (strncmp(argv[1], CMD_SET_ACTION, strlen(CMD_SET_ACTION)) == 0) {
         if (argc < 4) {
             usage(argc, argv);
             retval = 1;
