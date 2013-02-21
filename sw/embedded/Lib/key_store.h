@@ -7,12 +7,7 @@
 
 #define KEY_STORE_INVALID_INDEX (-1)
 
-typedef enum {
-    QUICKKEY_1 = 0,
-    QUICKKEY_2,
-    QUICKKEY_3,
-    QUICKKEY_MAX
-} QuickKey_t;
+#define KEY_STORE_NUM_QUICK_KEYS 6
 
 typedef struct {
     char key[KEY_STORE_MAX_KEY_LEN];
@@ -28,7 +23,7 @@ int key_store_num_keys(void);
 void key_store_incr(int count);
 void key_store_decr(int count);
 int key_store_index(void);
-int key_store_quick_index(QuickKey_t quickkey);
+int key_store_quick_index(int quickkey);
 
 void key_store_set_key(char *buf, int offset, int length);
 void key_store_set_name(char *buf, int offset, int length);
@@ -36,6 +31,6 @@ void key_store_commit_index(int index);
 
 void key_store_set_num_keys(int count);
 
-void key_store_set_quick_index(QuickKey_t quickkey, int index);
+void key_store_set_quick_index(int quickkey, int index);
 
 #endif // KEY_STORE_H

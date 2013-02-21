@@ -10,7 +10,7 @@
 
 static int num_keys = 0;
 static int current_key_index = KEY_STORE_INVALID_INDEX;
-static int quick_key[QUICKKEY_MAX] = {KEY_STORE_INVALID_INDEX, KEY_STORE_INVALID_INDEX, KEY_STORE_INVALID_INDEX};
+static int quick_key[KEY_STORE_NUM_QUICK_KEYS] = {KEY_STORE_INVALID_INDEX, KEY_STORE_INVALID_INDEX, KEY_STORE_INVALID_INDEX};
 static unsigned long paste_mode_end_time = 0;
 
 Key_t current_key;
@@ -22,14 +22,21 @@ void *_key_store_eeprom_addr_from_index(int index);
 void key_store_init(void)
 {
 	num_keys = settings_get_int(SETTINGS_NUM_KEYS);
-	quick_key[QUICKKEY_1] = settings_get_int(SETTINGS_QUICK_KEY_1);
-	quick_key[QUICKKEY_2] = settings_get_int(SETTINGS_QUICK_KEY_2);
-	quick_key[QUICKKEY_3] = settings_get_int(SETTINGS_QUICK_KEY_3);
+
+	quick_key[0] = settings_get_int(SETTINGS_QUICK_KEY_1);
+	quick_key[1] = settings_get_int(SETTINGS_QUICK_KEY_2);
+	quick_key[2] = settings_get_int(SETTINGS_QUICK_KEY_3);
+	quick_key[3] = settings_get_int(SETTINGS_QUICK_KEY_4);
+	quick_key[4] = settings_get_int(SETTINGS_QUICK_KEY_5);
+	quick_key[5] = settings_get_int(SETTINGS_QUICK_KEY_6);
 
 	DBG("num_keys=%d", num_keys);
-	DBG("quick_key[1]=%d", quick_key[QUICKKEY_1]);
-	DBG("quick_key[2]=%d", quick_key[QUICKKEY_2]);
-	DBG("quick_key[3]=%d", quick_key[QUICKKEY_3]);
+	DBG("quick_key[0]=%d", quick_key[0]);
+	DBG("quick_key[1]=%d", quick_key[1]);
+	DBG("quick_key[2]=%d", quick_key[2]);
+	DBG("quick_key[3]=%d", quick_key[3]);
+	DBG("quick_key[4]=%d", quick_key[4]);
+	DBG("quick_key[5]=%d", quick_key[5]);
 
 	if (num_keys > 0)
 		current_key_index = 0;
@@ -111,8 +118,11 @@ int key_store_index(void) {
     return current_key_index;
 }
 
-int key_store_quick_index(QuickKey_t quickkey) {
-    return quick_key[quickkey];
+int key_store_quick_index(int quickkey) {
+	if (quickkey < KEY_STORE_NUM_QUICK_KEYS)
+		return quick_key[quickkey];
+	else
+		return KEY_STORE_INVALID_INDEX;
 }
 
 void key_store_set_key(char *buf, int offset, int length) {
@@ -182,23 +192,36 @@ void key_store_set_num_keys(int count) {
 	settings_set_int(SETTINGS_NUM_KEYS, count);
 }
 
-void key_store_set_quick_index(QuickKey_t quickkey, int index) {
+void key_store_set_quick_index(int quickkey, int index) {
+	SettingsId_t setting_id;
+	if (quickkey < 0 || quickkey >= KEY_STORE_NUM_QUICK_KEYS)
+		return;
 	if (index >= num_keys && index != KEY_STORE_INVALID_INDEX)
 		return;
 	switch (quickkey) {
-		case QUICKKEY_1:
-			settings_set_int(SETTINGS_QUICK_KEY_1, index);
+		case 0:
+			setting_id = SETTINGS_QUICK_KEY_1;
 			break;
-		case QUICKKEY_2:
-			settings_set_int(SETTINGS_QUICK_KEY_2, index);
+		case 1:
+			setting_id = SETTINGS_QUICK_KEY_2;
 			break;
-		case QUICKKEY_3:
-			settings_set_int(SETTINGS_QUICK_KEY_3, index);
+		case 2:
+			setting_id = SETTINGS_QUICK_KEY_3;
+			break;
+		case 3:
+			setting_id = SETTINGS_QUICK_KEY_4;
+			break;
+		case 4:
+			setting_id = SETTINGS_QUICK_KEY_5;
+			break;
+		case 5:
+			setting_id = SETTINGS_QUICK_KEY_6;
 			break;
 		default:
 			return;
 	}
 	quick_key[quickkey] = index;
+	settings_set_int(setting_id, index);
 }
 
 

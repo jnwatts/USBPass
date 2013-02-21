@@ -36,19 +36,37 @@ void action_paste_mode(void *priv) {
 void action_paste_quick_1(void *priv) {
     (void)priv;
 	DEBUG_ACTION("%s\r\n", __func__);
-    key_store_paste(key_store_quick_index(QUICKKEY_1));
+    key_store_paste(key_store_quick_index(0));
 }
 
 void action_paste_quick_2(void *priv) {
     (void)priv;
 	DEBUG_ACTION("%s\r\n", __func__);
-    key_store_paste(key_store_quick_index(QUICKKEY_2));
+    key_store_paste(key_store_quick_index(1));
 }
 
 void action_paste_quick_3(void *priv) {
     (void)priv;
 	DEBUG_ACTION("%s\r\n", __func__);
-    key_store_paste(key_store_quick_index(QUICKKEY_3));
+    key_store_paste(key_store_quick_index(2));
+}
+
+void action_paste_quick_4(void *priv) {
+    (void)priv;
+	DEBUG_ACTION("%s\r\n", __func__);
+    key_store_paste(key_store_quick_index(3));
+}
+
+void action_paste_quick_5(void *priv) {
+    (void)priv;
+	DEBUG_ACTION("%s\r\n", __func__);
+    key_store_paste(key_store_quick_index(4));
+}
+
+void action_paste_quick_6(void *priv) {
+    (void)priv;
+	DEBUG_ACTION("%s\r\n", __func__);
+    key_store_paste(key_store_quick_index(5));
 }
 
 
@@ -83,6 +101,15 @@ void map_button_to_action(button_obj_t *button, ActionType_t type, Action_t acti
 			break;
 		case ACTION_PASTE_QUICK_3:
 			*cb = action_paste_quick_3;
+			break;
+		case ACTION_PASTE_QUICK_4:
+			*cb = action_paste_quick_4;
+			break;
+		case ACTION_PASTE_QUICK_5:
+			*cb = action_paste_quick_5;
+			break;
+		case ACTION_PASTE_QUICK_6:
+			*cb = action_paste_quick_6;
 			break;
 
 		case ACTION_INVALID:
