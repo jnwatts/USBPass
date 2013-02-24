@@ -1,0 +1,8 @@
+lib/
+pkgconfig/
+*.prl
+*.user
+*.o
+*.so*
+moc_*
+ui_*
