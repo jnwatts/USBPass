@@ -19,6 +19,8 @@ HEADERS +=\
     usbpassdevice.h \
     usbpass_private.h
 
+QMAKE_CXXFLAGS += -ggdb
+
 unix {
     CONFIG      += create_pc create_prl no_install_prl
     CONFIG      += link_pkgconfig
