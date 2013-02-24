@@ -12,10 +12,12 @@ TEMPLATE = lib
 DEFINES += LIBUSBPASS_LIBRARY
 
 SOURCES += \
-    usbpassdevice.cpp
+    usbpassdevice.cpp \
+    usbpass_private.cpp
 
 HEADERS +=\
-    usbpassdevice.h
+    usbpassdevice.h \
+    usbpass_private.h
 
 unix {
     CONFIG      += create_pc create_prl no_install_prl
