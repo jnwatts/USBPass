@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "usbpassdevice.h"
+#include <usbpassdevice.h>
 
 #define CMD_SET_KEY "setkey"
 #define CMD_SET_NUM_KEYS "setnumkeys"
@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
             usage(argc, argv);
             retval = 1;
         } else {
-            usbpass.set_action(atoi(argv[2]),
-                                  atoi(argv[3]));
+            usbpass.set_action((USBPassDevice::Button_t)atoi(argv[2]),
+                                  (USBPassDevice::Action_t)atoi(argv[3]));
         }
     } else if (strncmp(argv[1], CMD_RESET, strlen(CMD_RESET)) == 0) {
         usbpass.reset();
