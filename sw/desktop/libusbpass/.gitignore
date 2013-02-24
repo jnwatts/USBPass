@@ -1,5 +1,6 @@
 lib/
 pkgconfig/
+Makefile
 *.prl
 *.user
 *.o
