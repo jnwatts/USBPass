@@ -19,6 +19,8 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
+QMAKE_CXXFLAGS += -ggdb
+
 unix {
     CONFIG += link_pkgconfig
     PKGCONFIG += usbpass
