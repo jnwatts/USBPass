@@ -24,7 +24,7 @@ unix {
     CONFIG      += link_pkgconfig
     PKGCONFIG   += hidapi-libusb
 
-    prefix = /usr/local
+    prefix = /usr
     target.path = $$prefix/lib
     headers.path = $$prefix/include
     headers.files = usbpassdevice.h
@@ -34,6 +34,6 @@ unix {
     QMAKE_PKGCONFIG_PREFIX = $$prefix
     QMAKE_PKGCONFIG_LIBDIR = $$prefix/lib
     QMAKE_PKGCONFIG_INCDIR = $$prefix/include
-    QMAKE_PKGCONFIG_DESTDIR = lib/pkgconfig
+    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
     INSTALLS    += headers target
 }
