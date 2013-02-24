@@ -1,4 +1,6 @@
+Makefile
 *.user
 *.o
 moc_*
 ui_*
+usbpass-gui
