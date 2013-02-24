@@ -1,7 +1,7 @@
 ==Issues with RevA1==
 * Copywrite mask is mirrored
 * Atmega32u2 comes pre-programmed for *EXTERNAL* 8MHz crystal (and clkdiv8): 8MHz square wave must be applied between XTAL1 and XTAL2
-** Consider building a boot-strapping jig
+** Consider building a boot-strapping jig: Needs buttons for nHWB and reset, 8MHz crystal, and 6-pin ISP? Pogopins?
 * nHWB needs to be broken out
 ** Consider connecting to SW3? (Easy rework to A1 to do this)
 * Accidentally ordered 0603 for R1 and R2 (should be 0402)
