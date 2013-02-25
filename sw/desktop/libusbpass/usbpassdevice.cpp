@@ -37,7 +37,7 @@ void USBPassDevice::open(QString serial_number)
     if (serial_number.size() > 0) {
         _serial_number = serial_number.toStdWString().c_str();
     }
-    data->device = hid_open(USBPASS_VID, USBPASS_PID, _serial_number);
+    data->device = hid_open(USBPASS_VID, USBPASS_PID, NULL); // _serial_number
     if (data->device == NULL) {
         perror("Failed to open device");
         return;
