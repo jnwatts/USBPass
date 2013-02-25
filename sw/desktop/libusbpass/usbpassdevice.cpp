@@ -4,7 +4,11 @@
 #include "usbpass_private.h"
 #include "usbpassdevice.h"
 
-
+#if 0
+#define DBG(msg, args...) printf("%s:%d " msg "\n", __func__, __LINE__, ##args)
+#else
+#define DBG(msg, args...) (void)0
+#endif
 #define toPrivate(data) ((USBPass_private*)(data))
 
 const int USBPassDevice::NUM_KEYS = 20;
@@ -27,6 +31,7 @@ USBPassDevice::~USBPassDevice()
 
 void USBPassDevice::open(QString serial_number)
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     if (data->device)
         return;
@@ -46,6 +51,7 @@ void USBPassDevice::open(QString serial_number)
 
 void USBPassDevice::close()
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     if (data->device) {
         hid_close(data->device);
@@ -55,6 +61,7 @@ void USBPassDevice::close()
 
 void USBPassDevice::set_key(int index, QString key, QString name)
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     QByteArray ba;
     data->send_large_block(REPORT_ID_SET_KEY, key.toAscii());
@@ -65,6 +72,7 @@ void USBPassDevice::set_key(int index, QString key, QString name)
 
 void USBPassDevice::set_num_keys(int count)
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     QByteArray ba;
     ba.append((char)count);
@@ -73,6 +81,7 @@ void USBPassDevice::set_num_keys(int count)
 
 void USBPassDevice::set_quick_key(int quickkey, int keyindex)
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     QByteArray ba;
     ba.append((char)quickkey);
@@ -82,6 +91,7 @@ void USBPassDevice::set_quick_key(int quickkey, int keyindex)
 
 void USBPassDevice::set_action(Button_t button_id, Action_t action_id)
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     QByteArray ba;
     ba.append((char)button_id);
@@ -91,12 +101,14 @@ void USBPassDevice::set_action(Button_t button_id, Action_t action_id)
 
 QString USBPassDevice::get_serial()
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     return data->serial;
 }
 
 QString USBPassDevice::get_name()
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     if (data->name.size() != 0)
         return data->name;
@@ -106,12 +118,14 @@ QString USBPassDevice::get_name()
 
 void USBPassDevice::reset()
 {
+    DBG();
     USBPass_private *data = toPrivate(this->data);
     data->send_report(REPORT_ID_RESET, QByteArray());
 }
 
 QList<USBPassDevice *> USBPassDevice::enumerate_devices()
 {
+    DBG();
     USBPassDevice *device;
     QList<USBPassDevice*> devices;
     hid_device_info *device_info;
