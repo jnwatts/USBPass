@@ -23,11 +23,14 @@ private slots:
     void _refreshDevices(void);
     void _freeDevices(void);
     void _openCloseDevice(void);
-    void _keyIndexChanged(void);
-    void _keyValueChanged(void);
-    void _keyNameChanged(void);
-    void _quickkeyIndexChanged(void);
-    void _actionChanged(void);
+    void _setEnabled(void);
+    void _keyIndexChanged(int index);
+    void _keyValueChanged(QString value);
+    void _keyNameChanged(QString value);
+    void _buttonIndexChagned(int index);
+    void _actionIndexChanged(int index);
+    void _quickkeyIndexChanged(int index);
+    void _qkKeyIndexChanged(int index);
     void _sendToDevice(void);
 
 private:
@@ -39,8 +42,8 @@ private:
     };
 
     struct ButtonInfo {
-        USBPassDevice::Button_t button;
-        USBPassDevice::Action_t action;
+        int button;
+        int action;
         bool modified;
     };
 
@@ -50,12 +53,25 @@ private:
         bool modified;
     };
 
+    struct ButtonId {
+        QString name;
+        USBPassDevice::Button_t button;
+    };
+
+    struct ActionId {
+        QString name;
+        USBPassDevice::Action_t action;
+    };
+
+    static QMap<int, ButtonId> _buttonIds;
+    static QMap<int, ActionId> _actionIds;
+
     Ui::MainWindow *ui;
     USBPassDevice *_device;
     QList<USBPassDevice*> _devices;
 
     QMap<int, KeyInfo> _keys;
-    QMap<USBPassDevice::Button_t, ButtonInfo> _buttons;
+    QMap<int, ButtonInfo> _buttons;
     QMap<int, QuickkeyInfo> _quickkeys;
 
 };
