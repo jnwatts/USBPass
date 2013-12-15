@@ -84,13 +84,10 @@ MainWindow::MainWindow(QWidget *parent) :
         _actionIds[i++] = id;
     }
 
-    ui->sbKeyIndex->setMinimum(1);
-    ui->sbKeyIndex->setMaximum(USBPassDevice::NUM_KEYS);
-    ui->sbKeyIndex->setValue(1);
-
-    ui->sbQKIndex->setMinimum(1);
-    ui->sbQKIndex->setMaximum(USBPassDevice::NUM_KEYS);
-    ui->sbQKIndex->setValue(1);
+    for (int i = 1; i <= USBPassDevice::NUM_KEYS; i++) {
+        ui->cbKeyIndex->addItem(QString::number(i));
+        ui->cbQKIndex->addItem(QString::number(i));
+    }
 
     ui->cbButton->clear();
     foreach (ButtonId id, _buttonIds) {
@@ -106,13 +103,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbOpenCloseDevice, SIGNAL(clicked()), this, SLOT(_openCloseDevice()));
     connect(ui->pbSendToDevice, SIGNAL(clicked()), this, SLOT(_sendToDevice()));
 
-    connect(ui->sbKeyIndex, SIGNAL(valueChanged(int)), this, SLOT(_keyIndexChanged(int)));
+    connect(ui->cbKeyIndex, SIGNAL(currentIndexChanged(int)), this, SLOT(_keyIndexChanged(int)));
     connect(ui->tKeyName, SIGNAL(textChanged(QString)), this, SLOT(_keyNameChanged(QString)));
     connect(ui->tKeyValue, SIGNAL(textChanged(QString)), this, SLOT(_keyValueChanged(QString)));
 
     connect(ui->cbButton, SIGNAL(currentIndexChanged(int)), this, SLOT(_buttonIndexChagned(int)));
     connect(ui->cbAction, SIGNAL(currentIndexChanged(int)), this, SLOT(_actionIndexChanged(int)));
 
+    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionRefresh, SIGNAL(triggered()), this, SLOT(_refreshDevices()));
 
     _initInfo();
     _refreshDevices();
@@ -193,9 +192,9 @@ void MainWindow::_refreshDevices()
 {
     USBPassDevice *device = NULL;
     _freeDevices();
-    _devices = USBPassDevice::enumerate_devices();
+    _devices = QList<USBPassDevice*>::fromStdList(USBPassDevice::enumerate_devices());
     foreach (device, _devices) {
-        ui->cbDevices->addItem(device->get_name());
+        ui->cbDevices->addItem(QString::fromStdString(device->get_name()));
     }
 }
 
@@ -214,7 +213,7 @@ void MainWindow::_openCloseDevice()
     if (_device == NULL) {
         // Open device
         int i = ui->cbDevices->currentIndex();
-        if (i >= _devices.size())
+        if (i >= _devices.size() || i < 0)
             return;
         _device = _devices[i];
         ui->pbOpenCloseDevice->setText(CLOSE_DEVICE);
@@ -232,14 +231,16 @@ void MainWindow::_setEnabled(void)
     bool isOpen = (this->_device != NULL);
 
     ui->cbDevices->setEnabled(!isOpen);
-    ui->sbKeyIndex->setEnabled(isOpen);
+    ui->cbKeyIndex->setEnabled(isOpen);
     ui->tKeyName->setEnabled(isOpen);
     ui->tKeyValue->setEnabled(isOpen);
     ui->cbButton->setEnabled(isOpen);
     ui->cbAction->setEnabled(isOpen);
     ui->cbQuickKey->setEnabled(isOpen);
-    ui->sbQKIndex->setEnabled(isOpen);
+    ui->cbQKIndex->setEnabled(isOpen);
     ui->pbSendToDevice->setEnabled(isOpen);
+
+    ui->pbOpenCloseDevice->setEnabled(this->_devices.size() > 0);
 }
 
 void MainWindow::_keyIndexChanged(int index)
@@ -257,7 +258,7 @@ void MainWindow::_keyIndexChanged(int index)
 
 void MainWindow::_keyValueChanged(QString value)
 {
-    int index = ui->sbKeyIndex->value() - 1;
+    int index = ui->cbKeyIndex->currentIndex() - 1;
     QMap<int, KeyInfo>::Iterator info = _keys.find(index);
     if (info != _keys.end()) {
         info.value().value = value;
@@ -267,7 +268,7 @@ void MainWindow::_keyValueChanged(QString value)
 
 void MainWindow::_keyNameChanged(QString value)
 {
-    int index = ui->sbKeyIndex->value() - 1;
+    int index = ui->cbKeyIndex->currentIndex() - 1;
     QMap<int, KeyInfo>::Iterator info = _keys.find(index);
     if (info != _keys.end()) {
         info.value().name = value;
@@ -298,7 +299,7 @@ void MainWindow::_quickkeyIndexChanged(int index)
 {
     QMap<int, QuickkeyInfo>::Iterator info = _quickkeys.find(index);
     if (info != _quickkeys.end()) {
-        ui->sbQKIndex->setValue(info.value().keyIndex);
+        ui->cbQKIndex->setCurrentIndex(info.value().keyIndex);
     }
 }
 
@@ -322,17 +323,19 @@ void MainWindow::_sendToDevice(void)
     _device->open();
 
     for (keyInfo = _keys.begin(); keyInfo != _keys.end(); keyInfo++) {
+        KeyInfo ki = keyInfo.value();
         if (keyInfo.value().modified) {
             DBG("keyInfo: index=%d, value=%s, name=%s", keyInfo.value().index, keyInfo.value().value.toUtf8().constData(), keyInfo.value().name.toUtf8().constData());
-            this->_device->set_key(keyInfo.value().index, keyInfo.value().value, keyInfo.value().name);
+            this->_device->set_key(ki.index, ki.value.toStdString(), ki.name.toStdString());
             keyInfo.value().modified = false;
         }
     }
 
     for (quickkeyInfo = _quickkeys.begin(); quickkeyInfo != _quickkeys.end(); quickkeyInfo++) {
+        QuickkeyInfo qi = quickkeyInfo.value();
         if (quickkeyInfo.value().modified) {
             DBG("quickkeyInfo: quickIndex=%d, keyIndex=%d", quickkeyInfo.value().quickIndex, quickkeyInfo.value().keyIndex);
-            this->_device->set_quick_key(quickkeyInfo.value().quickIndex, quickkeyInfo.value().keyIndex);
+            this->_device->set_quick_key(qi.quickIndex, qi.keyIndex);
             quickkeyInfo.value().modified = false;
         }
     }
