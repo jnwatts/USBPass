@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <hidapi.h>
+#include <wchar.h>
+#include <string>
 #include "usbpass_private.h"
 #include "usbpassdevice.h"
 
@@ -14,8 +16,7 @@
 const int USBPassDevice::NUM_KEYS = 20;
 const int USBPassDevice::NUM_QUICKKEYS = 6;
 
-USBPassDevice::USBPassDevice(QString serial, QObject *parent) :
-    QObject(parent)
+USBPassDevice::USBPassDevice(std::string serial)
 {
     USBPass_private *private_data = new USBPass_private();
     data = (void*)private_data;
@@ -29,20 +30,18 @@ USBPassDevice::~USBPassDevice()
     delete toPrivate(this->data);
 }
 
-void USBPassDevice::open(QString serial_number)
+void USBPassDevice::open(std::string serial_number)
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
     if (data->device)
         return;
-    const wchar_t *_serial_number = NULL;
-    if (serial_number.size() == 0 && data->serial.size() > 0) {
-        serial_number = data->serial;
-    }
     if (serial_number.size() > 0) {
-        _serial_number = serial_number.toStdWString().c_str();
+        std::wstring _serial_number = std::wstring(serial_number.begin(), serial_number.end());
+        data->device = hid_open(USBPASS_VID, USBPASS_PID, _serial_number.c_str());
+    } else {
+        data->device = hid_open(USBPASS_VID, USBPASS_PID, NULL);
     }
-    data->device = hid_open(USBPASS_VID, USBPASS_PID, NULL); // _serial_number
     if (data->device == NULL) {
         perror("Failed to open device");
         return;
@@ -59,54 +58,46 @@ void USBPassDevice::close()
     }
 }
 
-void USBPassDevice::set_key(int index, QString key, QString name)
+void USBPassDevice::set_key(int index, std::string key, std::string name)
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
-    QByteArray ba;
-    data->send_large_block(REPORT_ID_SET_KEY, key.toAscii());
-    data->send_large_block(REPORT_ID_SET_NAME, name.toAscii());
-    ba.append((char)index);
-    data->send_report(REPORT_ID_COMMIT_KEY, ba);
+    data->send_report_string(REPORT_ID_SET_KEY, key);
+    data->send_report_string(REPORT_ID_SET_NAME, name);
+    data->send_report_byte(REPORT_ID_COMMIT_KEY, index);
 }
 
 void USBPassDevice::set_num_keys(int count)
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
-    QByteArray ba;
-    ba.append((char)count);
-    data->send_report(REPORT_ID_SET_NUM_KEYS, ba);
+    data->send_report_byte(REPORT_ID_SET_NUM_KEYS, count);
 }
 
 void USBPassDevice::set_quick_key(int quickkey, int keyindex)
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
-    QByteArray ba;
-    ba.append((char)quickkey);
-    ba.append((char)keyindex);
-    data->send_report(REPORT_ID_SET_QUICK_KEY, ba);
+    char buf[2] = {(char)quickkey, (char)keyindex};
+    data->send_report(REPORT_ID_SET_QUICK_KEY, buf, sizeof(buf));
 }
 
 void USBPassDevice::set_action(Button_t button_id, Action_t action_id)
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
-    QByteArray ba;
-    ba.append((char)button_id);
-    ba.append((char)action_id);
-    data->send_report(REPORT_ID_SET_ACTION, ba);
+    char buf[2] = {(char)button_id, (char)action_id};
+    data->send_report(REPORT_ID_SET_ACTION, buf, sizeof(buf));
 }
 
-QString USBPassDevice::get_serial()
+std::string USBPassDevice::get_serial()
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
     return data->serial;
 }
 
-QString USBPassDevice::get_name()
+std::string USBPassDevice::get_name()
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
@@ -120,21 +111,22 @@ void USBPassDevice::reset()
 {
     DBG();
     USBPass_private *data = toPrivate(this->data);
-    data->send_report(REPORT_ID_RESET, QByteArray());
+    data->send_report(REPORT_ID_RESET, NULL, 0);
 }
 
-QList<USBPassDevice *> USBPassDevice::enumerate_devices()
+std::list<USBPassDevice *> USBPassDevice::enumerate_devices(void)
 {
     DBG();
     USBPassDevice *device;
-    QList<USBPassDevice*> devices;
+    std::list<USBPassDevice*> devices;
     hid_device_info *device_info;
     hid_device_info *info;
 
     device_info = hid_enumerate(USBPASS_VID, USBPASS_PID);
     info = device_info;
     while (info) {
-        device = new USBPassDevice(QString::fromWCharArray(device_info->serial_number));
+        std::wstring wstr(device_info->serial_number);
+        device = new USBPassDevice(std::string(wstr.begin(), wstr.end()));
         devices.push_back(device);
         info = info->next;
     }

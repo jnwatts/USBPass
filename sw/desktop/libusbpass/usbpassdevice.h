@@ -1,13 +1,12 @@
 #ifndef USBPASSDEVICE_H
 #define USBPASSDEVICE_H
 
-#include <QObject>
+#include <list>
+#include <string>
 #include <stdint.h>
 
 class USBPassDevice
-        : public QObject
 {
-    Q_OBJECT
 public:
     enum Button_t {
         BUTTON_SW1 = 0x00,
@@ -36,27 +35,23 @@ public:
     static const int NUM_QUICKKEYS;
 
 public:
-    explicit USBPassDevice(QString serial = "", QObject *parent = 0);
+    explicit USBPassDevice(std::string serial = "");
     ~USBPassDevice(void);
 
-    void open(QString serial_number = "");
+    void open(std::string serial_number = "");
     void close(void);
 
-    void set_key(int index, QString key, QString name);
+    void set_key(int index, std::string key, std::string name);
     void set_num_keys(int count);
     void set_quick_key(int quickkey, int keyindex);
     void set_action(Button_t button_id, Action_t action_id);
 
-    QString get_serial(void);
-    QString get_name(void);
+    std::string get_serial(void);
+    std::string get_name(void);
 
     void reset(void);
 
-    static QList<USBPassDevice*> enumerate_devices(void);
-
-signals:
-    
-public slots:
+    static std::list<USBPassDevice*> enumerate_devices(void);
 
 private:
     void *data;
