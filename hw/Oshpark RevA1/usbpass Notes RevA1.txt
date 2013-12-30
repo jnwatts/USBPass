@@ -1,5 +1,5 @@
 ==Issues with RevA1==
-* Copywrite mask is mirrored
+* Copyright mask is mirrored
 * Atmega32u2 comes pre-programmed for *EXTERNAL* 8MHz crystal (and clkdiv8): 8MHz square wave must be applied between XTAL1 and XTAL2
 ** Consider building a boot-strapping jig: Needs buttons for nHWB and reset, 8MHz crystal, and 6-pin ISP? Pogopins?
 * nHWB needs to be broken out
