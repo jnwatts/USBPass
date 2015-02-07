@@ -1,0 +1,24 @@
+# About
+Measurement_Point_RevA.mod
+
+Contains the KiCAD module/footprint of some
+measurement points. Just some places to attach your
+measuremt equipment to the board.
+Corespontences with MEASUREMENT_POINT_ROUND_REVE_DATE15JUN2010 and
+MEASUREMENT_POINT_SQUARE_REVE_DATE15JUN2010 from the library 
+SymbolsSimilarEN60617+oldDIN617-RevE4. 
+Despite it is not a EN60617 Symbol, it may be useful.
+
+Measurement_Point_Round-SMD-Pad_Small
+Measurement_Point_Round-SMD-Pad_Big
+Measurement_Point_Square-SMD-Pad_Big
+Measurement_Point_Square-SMD-Pad_Small
+Measurement_Point_Square-TH_Small
+Measurement_Point_Square-TH_Big
+Measurement_Point_Round-TH_Big
+Measurement_Point_Round-TH_Small
+
+
+Author: Bernd Wiebus / Uedem / Germany / 21 Jun 2010
+GNU-GPL, NO WARRANTY!
+

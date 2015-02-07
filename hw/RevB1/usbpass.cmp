@@ -1,0 +1,143 @@
+Cmp-Mod V01 Created by CvPCB (2011-05-25)-stable date = Sat 26 Jan 2013 07:22:46 PM EST
+
+BeginCmp
+TimeStamp = /5101DFA1;
+Reference = C1;
+ValeurCmp = 10uF_10%;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51040E45;
+Reference = C2;
+ValeurCmp = C;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51040E5F;
+Reference = C3;
+ValeurCmp = C;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51040EF9;
+Reference = C4;
+ValeurCmp = C;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5101DF40;
+Reference = IC1;
+ValeurCmp = ATMEGA32U2;
+IdModule  = TQFP32;
+EndCmp
+
+BeginCmp
+TimeStamp = /5101D8AA;
+Reference = J1;
+ValeurCmp = USB_2;
+IdModule  = USB-A-PCB;
+EndCmp
+
+BeginCmp
+TimeStamp = /51042036;
+Reference = P1;
+ValeurCmp = P1;
+IdModule  = SMT1x6;
+EndCmp
+
+BeginCmp
+TimeStamp = /51044294;
+Reference = P2;
+ValeurCmp = P2;
+IdModule  = SMT1x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5101E0D6;
+Reference = R1;
+ValeurCmp = 22_5%;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /5101E0DC;
+Reference = R2;
+ValeurCmp = 22_5%;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /510413E4;
+Reference = R3;
+ValeurCmp = 10K;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /51045A17;
+Reference = R4;
+ValeurCmp = 0;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /51045A18;
+Reference = R5;
+ValeurCmp = 0;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /51045A19;
+Reference = R6;
+ValeurCmp = 0;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /510459DB;
+Reference = R7;
+ValeurCmp = 10K;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /510459D8;
+Reference = R8;
+ValeurCmp = 10K;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /510459BC;
+Reference = R9;
+ValeurCmp = 10K;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /51044980;
+Reference = SW1;
+ValeurCmp = SW_PUSH2;
+IdModule  = TL3315NF100Q;
+EndCmp
+
+BeginCmp
+TimeStamp = /510449B6;
+Reference = SW2;
+ValeurCmp = SW_PUSH2;
+IdModule  = TL3315NF100Q;
+EndCmp
+
+BeginCmp
+TimeStamp = /510449B7;
+Reference = SW3;
+ValeurCmp = SW_PUSH2;
+IdModule  = TL3315NF100Q;
+EndCmp
+
+EndListe
